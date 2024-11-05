@@ -1,0 +1,6 @@
+@FlashTeams.Api_HostAddress = http://localhost:5080
+
+GET {{FlashTeams.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
