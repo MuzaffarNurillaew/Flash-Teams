@@ -13,18 +13,12 @@ public static partial class HostConfigurations
         return builder;
     }
 
-    // create Configure(WebApplication)
     public static WebApplication Configure(this WebApplication app)
     {
-        app
+        app = app
             .ConfigureDevTools()
-            .ConfigureControllers();
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-        app.MapControllers();
+            .ConfigureControllers()
+            .ConfigureMiddlewares();
 
         return app;
     }

@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlashTeams.BusinessLogic\FlashTeams.BusinessLogic.csproj" />
     <ProjectReference Include="..\FlashTeams.DataAccess\FlashTeams.DataAccess.csproj" />
   </ItemGroup>
 
