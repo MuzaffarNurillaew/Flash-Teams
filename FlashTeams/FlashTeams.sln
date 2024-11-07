@@ -3,23 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashTeams.Test", "FlashTeams.Test\FlashTeams.Test.csproj", "{57401A7B-C488-4D75-B8D8-978D29BC572C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashTeams.Test", "FlashTeams.Test\FlashTeams.Test.csproj", "{57401A7B-C488-4D75-B8D8-978D29BC572C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashTeams.Api", "FlashTeams.Api\FlashTeams.Api.csproj", "{B5F9C74E-5A2C-44AE-9210-982BC03F97E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashTeams.Api", "FlashTeams.Api\FlashTeams.Api.csproj", "{B5F9C74E-5A2C-44AE-9210-982BC03F97E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashTeams.BusinessLogic", "FlashTeams.BusinessLogic\FlashTeams.BusinessLogic.csproj", "{C37F9C7F-5472-4342-B308-3B10007AA170}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashTeams.BusinessLogic", "FlashTeams.BusinessLogic\FlashTeams.BusinessLogic.csproj", "{C37F9C7F-5472-4342-B308-3B10007AA170}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashTeams.DataAccess", "FlashTeams.DataAccess\FlashTeams.DataAccess.csproj", "{081A6D5C-8AAA-4D8B-8AF4-3014E542A98B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashTeams.DataAccess", "FlashTeams.DataAccess\FlashTeams.DataAccess.csproj", "{081A6D5C-8AAA-4D8B-8AF4-3014E542A98B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashTeams.Domain", "FlashTeams.Domain\FlashTeams.Domain.csproj", "{0805AAB1-C8D2-496B-B6C6-F02C1B971277}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashTeams.Domain", "FlashTeams.Domain\FlashTeams.Domain.csproj", "{0805AAB1-C8D2-496B-B6C6-F02C1B971277}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashTeams.Shared", "FlashTeams.Shared\FlashTeams.Shared.csproj", "{C97F19E9-01B1-45EA-9BB8-E75082DD6C7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{57401A7B-C488-4D75-B8D8-978D29BC572C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -42,5 +41,15 @@ Global
 		{0805AAB1-C8D2-496B-B6C6-F02C1B971277}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0805AAB1-C8D2-496B-B6C6-F02C1B971277}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0805AAB1-C8D2-496B-B6C6-F02C1B971277}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C97F19E9-01B1-45EA-9BB8-E75082DD6C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C97F19E9-01B1-45EA-9BB8-E75082DD6C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C97F19E9-01B1-45EA-9BB8-E75082DD6C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C97F19E9-01B1-45EA-9BB8-E75082DD6C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69B10BA5-6077-42B7-B4EA-1BE8E872B0A8}
 	EndGlobalSection
 EndGlobal
