@@ -40,11 +40,11 @@ public class UserService(IRepository repository, IValidator<User> validator) : I
             cancellationToken: cancellationToken);
     }
 
-    public Task<User> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+    public Task<User> GetByUsernameAsync(string username, bool shouldThrowException = true, CancellationToken cancellationToken = default)
     {
         return repository.SelectAsync<User>(
             expression: user => user.Username == username,
-            shouldThrowException: true,
+            shouldThrowException: shouldThrowException,
             shouldTrack: false,
             cancellationToken: cancellationToken);
     }
@@ -60,6 +60,15 @@ public class UserService(IRepository repository, IValidator<User> validator) : I
             entity: user,
             includes: default,
             shouldSave: true,
+            cancellationToken: cancellationToken);
+    }
+
+    public Task<User> GetByEmailAsync(string email, bool shouldThrowException = true, CancellationToken cancellationToken = default)
+    {
+        return repository.SelectAsync<User>(
+            expression: user => user.Email == email,
+            shouldThrowException: shouldThrowException,
+            shouldTrack: false,
             cancellationToken: cancellationToken);
     }
 

@@ -2,14 +2,16 @@
 using FlashTeams.BusinessLogic.Interfaces;
 using FlashTeams.Domain.Entities;
 using FlashTeams.Shared.Dtos.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlashTeams.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/[controller]")]
 public class UsersController(IUserService userService) : ControllerBase
 {
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<UserResultDto>> Create(UserCreationDto userDto, CancellationToken cancellationToken)
     {
@@ -20,6 +22,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(new UserResultDto(createdUser));
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserResultDto>>> GetAll(CancellationToken cancellationToken)
     {
@@ -30,6 +33,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(mappedUsers);
     }
 
+    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<UserResultDto>> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -38,6 +42,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(UserResultDto.Create(foundUser));
     }
 
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<bool>> DeleteById(Guid id, CancellationToken cancellationToken)
     {
@@ -46,6 +51,7 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(isDeleted);
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<ActionResult<UserResultDto>> Update(UserUpdateDto userDto, CancellationToken cancellationToken)
     {

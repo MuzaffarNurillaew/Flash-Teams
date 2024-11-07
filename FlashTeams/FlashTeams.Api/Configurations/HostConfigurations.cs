@@ -8,7 +8,9 @@ public static partial class HostConfigurations
             .ConfigureStorage()
             .ConfigureServices()
             .ConfigureDevTools()
-            .ConfigureControllers();
+            .ConfigureControllers()
+            .ConfigureAuthentication()
+            .RegisterSettings();
 
         return builder;
     }

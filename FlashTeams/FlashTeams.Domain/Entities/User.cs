@@ -8,7 +8,8 @@ public class User(
     string email,
     string username,
     string phoneNumber,
-    string passwordHash) : IFlashTeamsEntity, IEntity
+    string passwordHash)
+    : IFlashTeamsEntity, IEntity
 {
     public User(
         Guid id,
@@ -21,12 +22,6 @@ public class User(
         : this(firstName, lastName, email, username, phoneNumber, password)
     {
         Id = id;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Username = username;
-        PhoneNumber = phoneNumber;
-        PasswordHash = password;
     }
 
     public Guid Id { get; set; } = Guid.NewGuid();

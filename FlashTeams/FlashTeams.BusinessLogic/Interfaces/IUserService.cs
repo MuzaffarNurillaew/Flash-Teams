@@ -14,5 +14,7 @@ public interface IUserService
 
     Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<User> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
+    Task<User> GetByUsernameAsync(string username, bool shouldThrowException = true, CancellationToken cancellationToken = default);
+
+    Task<User> GetByEmailAsync(string email, bool shouldThrowException = true, CancellationToken cancellationToken = default);
 }
