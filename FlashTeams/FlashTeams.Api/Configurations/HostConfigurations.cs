@@ -5,6 +5,7 @@ public static partial class HostConfigurations
     public static WebApplicationBuilder Configure(this WebApplicationBuilder builder)
     {
         builder = builder
+            .ConfigureCredentials()
             .ConfigureStorage()
             .ConfigureServices()
             .ConfigureDevTools()

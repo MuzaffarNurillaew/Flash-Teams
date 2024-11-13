@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Azure.Identity;
 using FlashTeams.Api.Middlewares;
 using FlashTeams.BusinessLogic.Interfaces;
 using FlashTeams.BusinessLogic.Services;
@@ -17,6 +18,18 @@ namespace FlashTeams.Api.Configurations;
 
 public static partial class HostConfigurations
 {
+    private static WebApplicationBuilder ConfigureCredentials(this WebApplicationBuilder builder)
+    {
+        if (builder.Environment.IsProduction())
+        {
+            builder.Configuration.AddAzureKeyVault(
+                vaultUri: new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+                credential: new DefaultAzureCredential());
+        }
+
+        return builder;
+    }
+
     private static WebApplicationBuilder ConfigureStorage(this WebApplicationBuilder builder)
     {
         builder.Services.AddDbContext<FlashTeamsDbContext>(options =>
