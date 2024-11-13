@@ -5,10 +5,12 @@ on:
     - main
 env:
   AZURE_WEBAPP_NAME: flashteams-api
-  AZURE_WEBAPP_PACKAGE_PATH: FlashTeams.Api/publish
+  AZURE_WEBAPP_PACKAGE_PATH: ./publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: FlashTeams.Api
+  SOLUTION_FILE: FlashTeams/FlashTeams.sln
+  WEBAPP_DIRECTORY: FlashTeams/FlashTeams.Api
+  TESTAPP_DIRECTORY: FlashTeams/FlashTeams.Test
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,13 +21,13 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore "${{ env.SOLUTION_FILE }}"
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "${{ env.SOLUTION_FILE }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test "${{ env.TESTAPP_DIRECTORY }}" --no-build
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+      run: dotnet publish "${{ env.WEBAPP_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -44,5 +46,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.FLASHTEAMS_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.WEBAPP_PUBLISH_PROFILE }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
