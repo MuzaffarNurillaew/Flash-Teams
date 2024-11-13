@@ -1,4 +1,5 @@
 ﻿using FlashTeams.Domain.Entities;
+using FlashTeams.Shared.Dtos.Auth;
 
 namespace FlashTeams.BusinessLogic.Interfaces;
 
@@ -17,4 +18,6 @@ public interface IUserService
     Task<User> GetByUsernameAsync(string username, bool shouldThrowException = true, CancellationToken cancellationToken = default);
 
     Task<User> GetByEmailAsync(string email, bool shouldThrowException = true, CancellationToken cancellationToken = default);
+
+    Task<bool> SetPasswordFirstTimeAsync(string email, FirstTimePasswordCreationDto setPasswordFirstTimeDto, CancellationToken cancellationToken);
 }

@@ -8,11 +8,13 @@ public class UserResultDto(User createdUser)
 
     public string FirstName { get; set; } = createdUser.FirstName;
 
-    public string LastName { get; set; } = createdUser.LastName;
+    public string? LastName { get; set; } = createdUser.LastName;
 
     public string Email { get; set; } = createdUser.Email;
 
-    public string PhoneNumber { get; set; } = createdUser.PhoneNumber;
+    public string? PhoneNumber { get; set; } = createdUser.PhoneNumber;
+
+    public string Username { get; set; } = createdUser.Username;
 
     public static UserResultDto Create(User user)
     {

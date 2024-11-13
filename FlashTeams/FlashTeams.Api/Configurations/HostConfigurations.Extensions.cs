@@ -4,6 +4,7 @@ using FlashTeams.BusinessLogic.Interfaces;
 using FlashTeams.BusinessLogic.Services;
 using FlashTeams.BusinessLogic.Validators;
 using FlashTeams.DataAccess.DbContexts;
+using FlashTeams.DataAccess.Mappers;
 using FlashTeams.DataAccess.Repositories;
 using FlashTeams.Shared.Configurations;
 using FluentValidation;
@@ -44,6 +45,11 @@ public static partial class HostConfigurations
                 ValidAudience = builder.Configuration.GetValue<string>("JwtSettings:Audience"),
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JwtSettings:SecretKey")!)),
             };
+        })
+        .AddGoogle(options =>
+        {
+            options.ClientId = builder.Configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
+            options.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty;
         });
 
         return builder;
@@ -55,8 +61,12 @@ public static partial class HostConfigurations
 
         builder.Services.AddScoped<IUserService, UserService>();
 
-        builder.Services.AddAutoMapper(typeof(UserService).Assembly);
+        builder.Services.AddScoped<IAuthService, AuthService>();
+
+        builder.Services.AddAutoMapper(typeof(EntityMapper).Assembly);
         builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
+
+        builder.Services.AddHttpContextAccessor();
 
         return builder;
     }
@@ -74,6 +84,15 @@ public static partial class HostConfigurations
             };
         });
 
+        builder.Services.AddSingleton(serviceProvider =>
+        {
+            return new GoogleAuthSettings
+            {
+                ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? string.Empty,
+                ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? string.Empty,
+            };
+        });
+
         return builder;
     }
 
@@ -81,7 +100,7 @@ public static partial class HostConfigurations
     {
         builder.Services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "GameStore", Version = "v1" });
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Flash Teams", Version = "v1" });
 
             var jwtSecurityScheme = new OpenApiSecurityScheme
             {
@@ -121,7 +140,7 @@ public static partial class HostConfigurations
 
     private static WebApplication ConfigureDevTools(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -144,6 +163,27 @@ public static partial class HostConfigurations
     private static WebApplication ConfigureMiddlewares(this WebApplication app)
     {
         app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.Use(async (context, next) =>
+        {
+            if (!context.Response.Headers.TryAdd("Cross-Origin-Opener-Policy", "same-origin"))
+            {
+                context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
+            }
+
+            await next();
+        });
+
+        return app;
+    }
+
+    private static WebApplication ConfigureCors(this WebApplication app)
+    {
+        app.UseCors(options =>
+        {
+            options.AllowAnyOrigin();
+            options.AllowAnyMethod();
+            options.AllowAnyHeader();
+        });
 
         return app;
     }

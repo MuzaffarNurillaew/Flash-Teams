@@ -4,6 +4,7 @@ using FlashTeams.DataAccess.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlashTeams.DataAccess.Migrations
 {
     [DbContext(typeof(FlashTeamsDbContext))]
-    partial class FlashTeamsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241112074519_Nullable password and google id added")]
+    partial class Nullablepasswordandgoogleidadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

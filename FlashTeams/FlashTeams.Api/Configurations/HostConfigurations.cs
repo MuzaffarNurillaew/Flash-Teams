@@ -20,7 +20,8 @@ public static partial class HostConfigurations
         app = app
             .ConfigureDevTools()
             .ConfigureControllers()
-            .ConfigureMiddlewares();
+            .ConfigureMiddlewares()
+            .ConfigureCors();
 
         return app;
     }

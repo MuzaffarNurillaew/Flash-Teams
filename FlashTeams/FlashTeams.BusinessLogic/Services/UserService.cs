@@ -1,6 +1,8 @@
 ﻿using FlashTeams.BusinessLogic.Interfaces;
 using FlashTeams.DataAccess.Repositories;
 using FlashTeams.Domain.Entities;
+using FlashTeams.Shared.Dtos.Auth;
+using FlashTeams.Shared.Exceptions;
 using FluentValidation;
 
 namespace FlashTeams.BusinessLogic.Services;
@@ -9,9 +11,9 @@ public class UserService(IRepository repository, IValidator<User> validator) : I
 {
     public async Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
     {
-        await validator.ValidateAndThrowAsync(user, cancellationToken: cancellationToken);
+        await validator.ValidateAsync(user, opt => opt.IncludeRuleSets("Create").ThrowOnFailures(), cancellationToken);
 
-        user.PasswordHash = HashPassword(user.PasswordHash);
+        SetHashedPassword(user);
 
         return await repository.InsertAsync(user, cancellationToken: cancellationToken);
     }
@@ -51,9 +53,9 @@ public class UserService(IRepository repository, IValidator<User> validator) : I
 
     public async Task<User> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
-        await validator.ValidateAndThrowAsync(user, cancellationToken: cancellationToken);
+        await validator.ValidateAsync(user, opt => opt.IncludeRuleSets("Update").ThrowOnFailures(), cancellationToken);
 
-        user.PasswordHash = HashPassword(user.PasswordHash);
+        SetHashedPassword(user);
 
         return await repository.UpdateAsync(
             expression: u => u.Id == user.Id,
@@ -72,8 +74,32 @@ public class UserService(IRepository repository, IValidator<User> validator) : I
             cancellationToken: cancellationToken);
     }
 
+    public async Task<bool> SetPasswordFirstTimeAsync(string email, FirstTimePasswordCreationDto setPasswordFirstTimeDto, CancellationToken cancellationToken)
+    {
+        var user = await GetByEmailAsync(email!, true, cancellationToken);
+
+        if (user.PasswordHash != null)
+        {
+            throw new FlashTeamsException(400, "Password is already set, use different endpoint to reset password.");
+        }
+
+        user.PasswordHash = setPasswordFirstTimeDto.Password;
+
+        await UpdateAsync(user, cancellationToken);
+
+        return true;
+    }
+
     private static string HashPassword(string password)
     {
         return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
+    private static void SetHashedPassword(User user)
+    {
+        if (user.PasswordHash is not null)
+        {
+            user.PasswordHash = HashPassword(user.PasswordHash);
+        }
     }
 }

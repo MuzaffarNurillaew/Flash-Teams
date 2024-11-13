@@ -13,22 +13,48 @@ public class UserValidator : AbstractValidator<User>
             .MaximumLength(50);
 
         RuleFor(user => user.LastName)
-            .NotEmpty()
             .MaximumLength(50);
 
-        RuleFor(user => user.Email)
-            .NotEmpty()
-            .EmailAddress()
-            .MustAsync(async (email, ct) => !await repository.ExistsAsync<User>(
-                    u => u.Email == email,
-                    shouldThrowException: false,
-                    cancellationToken: ct));
-
         RuleFor(user => user.PhoneNumber)
-            .NotEmpty()
             .MustAsync(async (phone, ct) => !await repository.ExistsAsync<User>(
                     u => u.PhoneNumber == phone,
                     shouldThrowException: false,
-                    cancellationToken: ct));
+                    cancellationToken: ct))
+            .When(user => user.PhoneNumber is not null);
+
+        RuleFor(user => user.Username)
+            .MustAsync(async (username, ct) => !await repository.ExistsAsync<User>(
+                    u => u.Username == username,
+                    shouldThrowException: false,
+                    cancellationToken: ct))
+            .When(user => user.Username is not null);
+
+        RuleSet("Update", () =>
+        {
+            RuleFor(user => user.Email)
+                .NotEmpty()
+                .EmailAddress()
+                .MustAsync(async (email, ct) => await repository.ExistsAsync<User>(
+                        u => u.Email == email,
+                        shouldThrowException: false,
+                        cancellationToken: ct));
+
+            RuleFor(user => user.Id)
+                .MustAsync(async (id, ct) => await repository.ExistsAsync<User>(
+                        u => u.Id == id,
+                        shouldThrowException: false,
+                        cancellationToken: ct));
+        });
+
+        RuleSet("Create", () =>
+        {
+            RuleFor(user => user.Email)
+                .NotEmpty()
+                .EmailAddress()
+                .MustAsync(async (email, ct) => !await repository.ExistsAsync<User>(
+                        u => u.Email == email,
+                        shouldThrowException: false,
+                        cancellationToken: ct));
+        });
     }
 }

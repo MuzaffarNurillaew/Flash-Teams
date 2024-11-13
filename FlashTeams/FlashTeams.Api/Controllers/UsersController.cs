@@ -1,6 +1,8 @@
 ﻿using System.Data;
+using System.Security.Claims;
 using FlashTeams.BusinessLogic.Interfaces;
 using FlashTeams.Domain.Entities;
+using FlashTeams.Shared.Dtos.Auth;
 using FlashTeams.Shared.Dtos.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +11,7 @@ namespace FlashTeams.Api.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class UsersController(IUserService userService) : ControllerBase
+public class UsersController(IUserService userService, IAuthService authService) : ControllerBase
 {
     [Authorize]
     [HttpPost]
@@ -67,5 +69,16 @@ public class UsersController(IUserService userService) : ControllerBase
         var updatedUser = await userService.UpdateAsync(user, cancellationToken);
 
         return Ok(UserResultDto.Create(updatedUser));
+    }
+
+    [Authorize]
+    [HttpPost("set-password-first-time")]
+    public async Task<ActionResult<bool>> SetPasswordFirstTime(FirstTimePasswordCreationDto setPasswordFirstTimeDto, CancellationToken cancellationToken)
+    {
+        string email = authService.GetClaim(ClaimTypes.Email, throwExceptionIfNotFound: true);
+
+        bool isPasswordSet = await userService.SetPasswordFirstTimeAsync(email!, setPasswordFirstTimeDto, cancellationToken);
+
+        return Ok(isPasswordSet);
     }
 }
