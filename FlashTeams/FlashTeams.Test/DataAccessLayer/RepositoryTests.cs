@@ -412,6 +412,7 @@ public class RepositoryTests : IDisposable
                 destination.Username = source.Username;
                 destination.PhoneNumber = source.PhoneNumber;
                 destination.PasswordHash = source.PasswordHash;
+                destination.GoogleId = source.GoogleId;
             });
     }
 }
