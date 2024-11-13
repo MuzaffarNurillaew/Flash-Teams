@@ -24,7 +24,7 @@ public static partial class HostConfigurations
         {
             builder.Configuration.AddAzureKeyVault(
                 vaultUri: new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
-                credential: new DefaultAzureCredential());
+                credential: new DefaultAzureCredential(new DefaultAzureCredentialOptions { ExcludeEnvironmentCredential = true }));
         }
 
         return builder;
@@ -35,6 +35,7 @@ public static partial class HostConfigurations
         builder.Services.AddDbContext<FlashTeamsDbContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
         return builder;
