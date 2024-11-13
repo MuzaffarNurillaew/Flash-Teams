@@ -1,13 +1,18 @@
-name: Build and deploy ASP.Net Core app to an Azure Web App
+name: Flash Teams backend app CI/CD Pipeline
 
 env:
   AZURE_WEBAPP_NAME: flashteams-api
-  AZURE_WEBAPP_PACKAGE_PATH: './FlashTeams/FlashTeams.Api'
-  DOTNET_VERSION: '8'
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
+  DOTNET_VERSION: '8.0.x'
+  APPLICATION_SOLUTION_FILE: './FlashTeams'
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -34,16 +39,16 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ${{ env.APPLICATION_SOLUTION_FILE }} --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ${{ env.APPLICATION_SOLUTION_FILE }} --configuration Release --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     permissions:
