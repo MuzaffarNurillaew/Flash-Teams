@@ -16,9 +16,11 @@ public static partial class HostConfigurations
         return builder;
     }
 
-    public static WebApplication Configure(this WebApplication app)
+    public static async Task<WebApplication> ConfigureAsync(this WebApplication app)
     {
-        app = app
+        await app.MigrateDatabaseSchemasAsync();
+
+        app
             .ConfigureDevTools()
             .ConfigureControllers()
             .ConfigureMiddlewares()

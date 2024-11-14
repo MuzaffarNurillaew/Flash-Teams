@@ -20,7 +20,7 @@ public static partial class HostConfigurations
 {
     private static WebApplicationBuilder ConfigureCredentials(this WebApplicationBuilder builder)
     {
-        if (builder.Environment.IsDevelopment())
+        if (builder.Environment.IsProduction())
         {
             builder.Configuration.AddAzureKeyVault(
                 vaultUri: new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
@@ -198,6 +198,18 @@ public static partial class HostConfigurations
             options.AllowAnyMethod();
             options.AllowAnyHeader();
         });
+
+        return app;
+    }
+
+    private static async Task<WebApplication> MigrateDatabaseSchemasAsync(this WebApplication app)
+    {
+        using var serviceScope = app.Services.CreateScope();
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<FlashTeamsDbContext>();
+        if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
+        {
+            await dbContext.Database.MigrateAsync();
+        }
 
         return app;
     }
