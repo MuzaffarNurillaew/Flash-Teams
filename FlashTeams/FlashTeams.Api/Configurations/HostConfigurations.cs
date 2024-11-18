@@ -6,12 +6,12 @@ public static partial class HostConfigurations
     {
         builder = builder
             .ConfigureCredentials()
+            .RegisterSettings()
             .ConfigureStorage()
             .ConfigureServices()
             .ConfigureDevTools()
             .ConfigureControllers()
-            .ConfigureAuthentication()
-            .RegisterSettings();
+            .ConfigureAuthentication();
 
         return builder;
     }

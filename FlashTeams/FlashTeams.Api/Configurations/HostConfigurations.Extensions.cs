@@ -35,7 +35,6 @@ public static partial class HostConfigurations
         builder.Services.AddDbContext<FlashTeamsDbContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
         return builder;
@@ -87,25 +86,8 @@ public static partial class HostConfigurations
 
     private static WebApplicationBuilder RegisterSettings(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton(serviceProvider =>
-        {
-            return new JwtSettings
-            {
-                Audience = builder.Configuration.GetValue<string>("JwtSettings:Audience")!,
-                Issuer = builder.Configuration.GetValue<string>("JwtSettings:Issuer")!,
-                SecretKey = builder.Configuration.GetValue<string>("JwtSettings:SecretKey")!,
-                ExpirationMinutes = builder.Configuration.GetValue<int>("JwtSettings:ExpirationMinutes")!,
-            };
-        });
-
-        builder.Services.AddSingleton(serviceProvider =>
-        {
-            return new GoogleAuthSettings
-            {
-                ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? string.Empty,
-                ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? string.Empty,
-            };
-        });
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+        builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Authentication:Google"));
 
         return builder;
     }

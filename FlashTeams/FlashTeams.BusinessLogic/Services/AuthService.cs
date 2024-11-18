@@ -8,13 +8,14 @@ using FlashTeams.Shared.Dtos.Auth;
 using FlashTeams.Shared.Exceptions;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FlashTeams.BusinessLogic.Services;
 
 #pragma warning disable SA1010
 #pragma warning disable IDE0046
-public class AuthService(JwtSettings jwtSettings, GoogleAuthSettings googleAuthSettings, IUserService userService, IHttpContextAccessor httpContextAccessor) : IAuthService
+public class AuthService(IOptions<JwtSettings> jwtSettingOptions, IOptions<GoogleAuthSettings> googleAuthSettingOptions, IUserService userService, IHttpContextAccessor httpContextAccessor) : IAuthService
 {
     public string GenerateToken(User user)
     {
@@ -25,6 +26,7 @@ public class AuthService(JwtSettings jwtSettings, GoogleAuthSettings googleAuthS
             new(ClaimTypes.Email, user.Email),
         };
 
+        var jwtSettings = jwtSettingOptions.Value;
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -45,7 +47,7 @@ public class AuthService(JwtSettings jwtSettings, GoogleAuthSettings googleAuthS
 
     public async Task<GoogleAuthResultDto> AuthenticateAsync(GoogleAuthCredential credential, CancellationToken cancellationToken)
     {
-        var clientId = googleAuthSettings.ClientId;
+        var clientId = googleAuthSettingOptions.Value.ClientId;
 
         try
         {
