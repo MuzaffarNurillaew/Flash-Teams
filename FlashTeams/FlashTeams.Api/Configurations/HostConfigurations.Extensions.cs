@@ -20,7 +20,7 @@ public static partial class HostConfigurations
 {
     private static WebApplicationBuilder ConfigureCredentials(this WebApplicationBuilder builder)
     {
-        if (builder.Environment.IsProduction())
+        if (builder.Environment.IsProduction() && false)
         {
             builder.Configuration.AddAzureKeyVault(
                 vaultUri: new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
